@@ -104,7 +104,7 @@ And then we can get port config value and make one GPIO as clock output, Here is
 ```python
 pcfg = QUAD_PORT_CONFIG()
 status = dll.CP210x_GetQuadPortConfig(hdl.value, byref(pcfg))
-pcfg.EnhancedFxn_IFC0 = 0x01
+pcfg.EnhancedFxn_IFC0 = 0x10
 status = dll.CP210x_SetQuadPortConfig(hdl.value, byref(pcfg))
 dll.CP210x_Reset(hdl.value)
 ```
