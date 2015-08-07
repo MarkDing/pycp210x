@@ -1,12 +1,12 @@
-How to setup CP2108 port config by python?
+How do I setup CP2108 port config using python?
 =======
 
 ## Get CP210x manufacturing DLL from AN721
-AN721SW package contains DLL file for accessing CP210x configuration. Here is the path of Windows DLL.  
+AN721SW package contains a DLL file for accessing CP210x configuration. Here is the path of Windows DLL.  
 AN721SW\Windows\CP210x_InterfaceLibrary\ManufacturingDLL\x86_64\CP210xManufacturing.dll
 
 ## Load DLL file
-Prepare a python file, named cp210x.py, 
+Prepare a Python file, named cp210x.py, 
     
 * import ctypes. 
 
@@ -25,13 +25,13 @@ dll = cdll.LoadLibrary("CP210xManufacturing.dll")
 Load a shared library into the process and return it. This method always returns a new instance of the library
 
 ## Call function inside dll
-Some function contains pointer parameters. Like this one.
+Some functions contain pointer parameters. Like this one:
 
 ```C
 CP210x_STATUS CP210x_GetNumDevices( LPDWORD NumDevices )
 ```
 
-Pythonctypes exports the byref() function which is used to pass parameters by reference. 
+Python ctypes exports the byref() function which is used to pass parameters by reference. 
 Here is the example:
 
 ```python
@@ -40,7 +40,7 @@ status = dll.CP210x_GetNumDevices(byref(dwNumDevices))
 print("Found %d devices" %dwNumDevices.value)
 ```
 
-For CP2108 device, it outputs "Found 4 devices"
+For a CP2108 device, it outputs "Found 4 devices"
 
 ## Get CP2108 port config
 
@@ -57,9 +57,9 @@ CP210x_STATUS CP210x_SetQuadPortConfig(
     );
 ```
 
-The parameter QUAD_PORT_CONFIG is structure which defined in CP210xManufaturingDLL.h. 
-In Python, Structures and unions must derive from the Structure and Union base classes which are defined in the ctypes module.
-Here are the definition in python.
+The parameter QUAD_PORT_CONFIG is a structure which defined in CP210xManufaturingDLL.h. 
+In Python, structures and unions must derive from the Structure and Union base classes which are defined in the ctypes module.
+Here are the definitions in Python.
 
 ```python
 class QUAD_PORT_STATE(Structure):
@@ -99,7 +99,7 @@ class QUAD_PORT_CONFIG(Structure):
                 ]
 ```
 
-And then we can get port config value and make one GPIO as clock output, Here is the example code
+Then, we can get port config values and set one GPIO to be clock output. Here is the example code
 
 ```python
 pcfg = QUAD_PORT_CONFIG()
@@ -109,9 +109,9 @@ status = dll.CP210x_SetQuadPortConfig(hdl.value, byref(pcfg))
 dll.CP210x_Reset(hdl.value)
 ```
 
-For the board, we can see the LED DS3 on, measure the waveform, we can see clock signal. 
+On the board, we can see the LED DS3 is on. We can see clock signal by measuring on an oscilloscope.
    
 
 ## Reference:
-Here is the python official website for ctypes
+Here is the Python official website for ctypes
 https://docs.python.org/3.4/library/ctypes.html#structure-union-alignment-and-byte-order
